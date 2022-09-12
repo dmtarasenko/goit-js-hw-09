@@ -1,5 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import Notiflix from 'notiflix';
 
 const inputEl = document.querySelector('#datetime-picker');
 const startBtn = document.querySelector('button[data-start]');
@@ -21,19 +22,22 @@ const fp = flatpickr('#datetime-picker', {
       startBtn.removeAttribute('disabled');
     } else {
       startBtn.setAttribute('disabled', 'disabled');
-      alert('Please choose a date in the future');
+      Notiflix.Notify.failure('Please choose a date in the future');
     }
   },
 });
 
 function onStartBtnClick() {
   inputEl.setAttribute('disabled', 'disabled');
+  startBtn.setAttribute('disabled', 'disabled');
 
   const intervalId = setInterval(() => {
     const deltaTime = fp.selectedDates[0] - new Date();
     if (deltaTime <= 0) {
-      alert('УРА, ТАЙМЕР ВІДПРАЦЮВАВ');
+      Notiflix.Notify.success('УРА, ТАЙМЕР ВІДПРАЦЮВАВ');
       clearInterval(intervalId);
+      inputEl.removeAttribute('disabled');
+      startBtn.removeAttribute('disabled');
       return;
     }
     createMarkup(deltaTime);
